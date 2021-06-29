@@ -11,18 +11,28 @@ terraform {
   required_version = ">= 0.14.9"
 }
 
-provider "aws" {
-  access_key = "AKIAYEEOWZR2SMB7RCT6"
-  secret_key = "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"
-  region = "us-east-1"
+variable "instance_count" {
+  default = "2"
 }
 
-resource "aws_instance" "mysql_host" {
-  #ami           = "ami-01fc429821bf1f4b4"
+variable "instance_type" {
+  default = "t2.micro"
+}
+
+variable "aws_region" {
+  default = "us-east-1"
+}
+
+resource "aws_instance" "Instance_mysql" {
+  #count         = var.instance_count
   ami		 = "ami-0b0af3577fe5e3532"
-  instance_type = "t2.micro"
+  #instance_type = "t2.micro"
+  instance_type = var.instance_type
+
 
   tags = {
+    #Name  = "Instance${count.index + 1}"
     Name = "InstanceMySql"
   }
 }
+
