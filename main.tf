@@ -36,23 +36,34 @@ provider "aws" {
 
 resource "aws_instance" "Instance" {
   key_name      = aws_key_pair.example.key_name
-  count         = var.instance_count
+  #count         = var.instance_count
   ami		 = "ami-0b0af3577fe5e3532"
   #instance_type = "t2.micro"
   instance_type = var.instance_type
   
-  connection {
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/.ssh/terraform")
-    host        = self.public_ip
-  }
+  #connection {
+  #  type        = "ssh"
+  #  user        = "ec2-user"
+  #  private_key = file("~/.ssh/terraform")
+  #  #host        = self.public_ip
+  #}
   
-  #provisioner "remote-exec"
+  provisioner "remote-exec" {
+    #connection {
+    #type        = "ssh"
+    #user        = "ec2-user"
+    #private_key = file("~/.ssh/terraform")
+    #host        = "${element(aws_instance.Instance[0].public_ip, count.index)}"
+    inline = [
+        "sudo amazon-linux-extras enable tomcat",
+        "sudo yum -y install tomcat"
+    #  #"sudo systemctl start nginx"
+    ]
+  } 
 
   tags = {
-    Name  = "Instance${count.index + 1}"
-    #Name = "InstanceMySql"
+    #Name  = "Instance${count.index + 1}"
+    Name = "InstanceMySql"
   }
 }
 
