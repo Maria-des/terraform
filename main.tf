@@ -11,8 +11,8 @@ terraform {
   required_version = ">= 0.14.9"
 }
 
-resource "aws_key_pair" "example" {
-  key_name   = "examplekey"
+resource "aws_key_pair" "example2" {
+  key_name   = "mykey"
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
@@ -35,7 +35,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "InstanceMysql" {
-  key_name      = aws_key_pair.example.key_name
+  key_name      = aws_key_pair.example2.key_name
   #count         = var.instance_count
   ami		 = "ami-0b0af3577fe5e3532"
   #instance_type = "t2.micro"
@@ -47,7 +47,12 @@ resource "aws_instance" "InstanceMysql" {
     private_key = file("~/.ssh/id_rsa")
     host        = self.public_ip
   }
-  
+ 
+  provisioner "file" {
+    source = "mysql.yaml"
+    destination = "/tmp/mysql.yaml"
+  }
+ 
   provisioner "remote-exec" {
     #connection {
     #type        = "ssh"
