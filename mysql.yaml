@@ -1,1 +1,12 @@
-test
+---
+ - hosts: all
+   user: ec2-user
+   become: yes
+   tasks:
+    - name: Installing mysql
+      action: yum name=mysql-server state=installed
+    - name: enable mysql
+      systemd:
+        name: mysqld
+        enabled: yes
+        masked: no

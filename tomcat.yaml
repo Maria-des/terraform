@@ -1,1 +1,22 @@
-test
+---
+ - hosts: all
+   user: ec2-user
+   become: yes
+   tasks:
+    - name: Installing java
+      action: yum name=java-1.8.0-openjdk state=installed
+    - name: Install wget
+      action: yum name=wget state=installed
+    - name: download tomcat server packages
+      get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.48/bin/apache-tomcat-9.0.48.tar.gz
+        dest: /usr/local
+
+    - name: extract tomcat packages
+      unarchive:
+        src: /usr/local/apache-tomcat-9.0.48.tar.gz
+        dest: /usr/local
+        remote_src: yes
+
+    - name: start tomcat services
+      shell: nohup /usr/local/apache-tomcat-9.0.48/bin/startup.sh
