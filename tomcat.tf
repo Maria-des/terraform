@@ -6,6 +6,7 @@ resource "aws_instance" "InstanceTomcat" {
   ami		 = "ami-0b0af3577fe5e3532"
   #instance_type = "t2.micro"
   instance_type = var.instance_type
+  security_groups = [aws_security_group.web_traffic.name]
   
   connection {
     type        = "ssh"
@@ -36,7 +37,14 @@ resource "aws_instance" "InstanceTomcat" {
       "sudo dnf config-manager --set-enabled codeready-builder-for-rhel-8-rhui-rpms",
       "sudo dnf install -y ansible",
       "chmod 600 ~/.ssh/id_rsa",
-      "echo ${self.private_ip} >> /tmp/lista"
+      "sudo dnf install java-1.8.0-openjdk-devel -y",
+      "sudo yum -y install wget",
+      "echo ${self.private_ip} >> /tmp/lista",
+      "sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo",
+      "sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key",
+      "sudo yum -y install jenkins",
+      "sudo systemctl start jenkins"
+
     ]
   } 
 
