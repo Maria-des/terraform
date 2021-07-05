@@ -30,7 +30,7 @@ variable "aws_region" {
 
 variable "ingressrules" {
   type    = list(number)
-  default = [80, 8080, 443, 22]
+  default = [80, 8080, 8088, 443, 22]
 }
 
 resource "aws_security_group" "web_traffic" {
