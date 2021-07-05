@@ -110,6 +110,7 @@ resource "aws_instance" "InstanceMysql" {
 	"sudo dnf install -y ansible",
 	"chmod 600 ~/.ssh/id_rsa",
         "echo ${self.private_ip} >> /tmp/lista"
+        "ansible-playbook -i /tmp/lista /tmp/mysql.yaml`
     ]
   } 
 
