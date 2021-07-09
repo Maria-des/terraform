@@ -1,0 +1,20 @@
+def lokalizacia='/var/lib/jenkins/workspace/deploy-war'
+stage 'Run git'
+    node {
+        def job = build job: 'deploy-war'
+        sh "cp ${lokalizacia}/* ${WORKSPACE}/" 
+    }
+stage 'check files'
+    node {
+        sh "ls -la ${pwd()}"
+    }
+stage 'Deploy war'
+    node {
+        sh "ls -la sample.war"
+        sh "sudo cp sample.war /usr/local/tomcat/webapps"
+    }
+
+stage 'Sent mail'
+    node {
+        def job = build job: 'mail'
+    }
